@@ -6,8 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 @Component
-public class CarDaoimpl implements web.Dao.CarDao {
+public class CarDaoimpl implements CarDao {
 
     private static int carsCount;
 

@@ -6,9 +6,15 @@ import web.model.Car;
 
 import java.util.List;
 @Service
-public class CarServiceImpl implements web.sevice.CarService {
+public class CarServiceImpl implements CarService {
 
-    CarDao carDao;
+    private final CarDao carDao;
+
+    public CarServiceImpl(CarDao carDao) {
+        this.carDao = carDao;
+    }
+
+
     @Override
     public List<Car> getAllCars() {
         return carDao.getAllCars();
