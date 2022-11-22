@@ -21,14 +21,14 @@ public class UserController {
         this.userService = userService;
     }
     @GetMapping()
-    public String index(Model model){
+    public String shoUsers(Model model){
         model.addAttribute("user", userService.getAllUsers());
-        return "user/index";
+        return "users/Users";
     }
     @GetMapping("/{id}")
-    public String show(@PathVariable("id") int id, Model model){
+    public String showUser(@PathVariable("id") int id, Model model){
         model.addAttribute("user", userService.getUserByID(id));
-        return "user/show";
+        return "users/showUser";
     }
     @GetMapping("/new")
     public String create(@ModelAttribute("user") User user){
