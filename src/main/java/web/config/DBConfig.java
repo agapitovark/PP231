@@ -2,12 +2,14 @@ package web.config;
 
 import jakarta.annotation.Resource;
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 import javax.sql.DataSource;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
@@ -25,9 +27,15 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 public class DBConfig {
     @Resource
-    private Environment enw; // получаем доступ к пропертям
+    private Environment enw;
+    @Autowired
+    public DBConfig( Environment enw) {
+        this.enw = enw;
+    }
+
+    // получаем доступ к пропертям
     @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean(){
+    public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean() {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource());
         em.setPackagesToScan(enw.getRequiredProperty("db.entity.package"));
@@ -37,23 +45,19 @@ public class DBConfig {
     }
 
     private Properties getHibernateProperties() {
-        try {
-            Properties properties = new Properties();
-            InputStream is = getClass().getClassLoader().getResourceAsStream("hibernate.properties");
-            properties.load(is);
-            return properties;
-        } catch (IOException e) {
-            throw new IllegalArgumentException("cant find propertiies file", e);
-        }
+        Properties properties = new Properties();
+        properties.put("hibernate.dialect", enw.getRequiredProperty("hibernate.dialect"));
+        properties.put("hibernate.hbm2ddl.auto", enw.getRequiredProperty("hibernate.hbm2ddl.auto"));
+        return properties;
     }
 
     @Bean
-    public DataSource dataSource(){
+    public DataSource dataSource() {
         BasicDataSource ds = new BasicDataSource();
+        ds.setDriverClassName(enw.getRequiredProperty("hibernate.driver_class"));
         ds.setUrl(enw.getRequiredProperty("db.url"));
         ds.setUsername(enw.getRequiredProperty("db.user"));
         ds.setPassword(enw.getRequiredProperty("db.password"));
-
         return ds;
     }
 }

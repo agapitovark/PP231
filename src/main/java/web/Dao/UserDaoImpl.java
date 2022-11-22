@@ -7,6 +7,7 @@ import web.config.DBConfig;
 import web.model.User;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
@@ -16,14 +17,11 @@ import java.util.stream.Collectors;
 
 @Component
 public class UserDaoImpl implements UserDao {
-
-    private final EntityManager em;
+    @PersistenceContext
+    EntityManager em;
     private List<User> users;
 
 
-    public UserDaoImpl(EntityManager em) {
-        this.em = em;
-    }
 
     public List<User> getAllUsers() {
         return em.createQuery("FROM User", User.class).getResultList();
