@@ -24,18 +24,18 @@ public class UserDaoImpl implements UserDao {
     public User getUserByID(int id) {
         return em.find(User.class, id);
     }
-    @Transactional
+
     public void saveUser(User user) {
 
         em.persist(user);
 
     }
-    @Transactional
+
     public void removeUser(int id) {
         User user = em.find(User.class,id);
         em.remove(user);
     }
-    @Transactional
+
     public void changeUser(User updateUser) {
         em.merge(updateUser);
     }
