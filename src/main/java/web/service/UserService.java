@@ -7,11 +7,11 @@ public interface UserService {
     List<User> getAllUsers();
 
 
-    void saveUser(String name, String lastName, byte age);
+    void saveUser(User user);
 
     void removeUser(int id);
 
-    User changeUser (int id, String name, String lastName, byte age);
+    void changeUser(int id, User updateUser);
 
     public User getUserByID(int id);
 }

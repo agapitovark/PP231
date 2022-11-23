@@ -1,38 +1,35 @@
 package web.Dao;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.springframework.stereotype.Component;
-import web.config.DBConfig;
-import web.model.User;
 
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import web.model.User;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.persistence.TypedQuery;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 
 @Component
 public class UserDaoImpl implements UserDao {
     @PersistenceContext
-    EntityManager em;
+    private EntityManager em;
     private List<User> users;
-
 
 
     public List<User> getAllUsers() {
         return em.createQuery("FROM User", User.class).getResultList();
     }
-    public User getUserByID(int id){
+
+    public User getUserByID(int id) {
         return em.find(User.class, id);
     }
+    @Transactional
+    public void saveUser(User user) {
 
-    public void saveUser(String name, String lastName, byte age) {
-        em.joinTransaction();
-        em.persist(new User(name, lastName, age));
+        em.persist(user);
+
     }
 
     public void removeUser(int id) {
@@ -40,11 +37,14 @@ public class UserDaoImpl implements UserDao {
         Query query = em.createQuery(HQL);
         query.setParameter("id", id);
     }
-    public User changeUser (int id, String name, String lastName, byte age){
-        User user =em.find(User.class, id);
-        user.setAge(age);
-        user.setName(name);
-        user.setLastName(lastName);
-        return user;
+
+    public void changeUser(int id, User updateUser) {
+        User usertobeupdated = getUserByID(id);
+        usertobeupdated.setName(updateUser.getName());
+        usertobeupdated.setLastName(updateUser.getLastName());
+        usertobeupdated.setAge(updateUser.getAge());
+
+
+
     }
 }
