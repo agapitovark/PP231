@@ -31,20 +31,13 @@ public class UserDaoImpl implements UserDao {
         em.persist(user);
 
     }
-
+    @Transactional
     public void removeUser(int id) {
-        String HQL = "DELETE User us where id = :id";
-        Query query = em.createQuery(HQL);
-        query.setParameter("id", id);
+        User user = em.find(User.class,id);
+        em.remove(user);
     }
-
-    public void changeUser(int id, User updateUser) {
-        User usertobeupdated = getUserByID(id);
-        usertobeupdated.setName(updateUser.getName());
-        usertobeupdated.setLastName(updateUser.getLastName());
-        usertobeupdated.setAge(updateUser.getAge());
-
-
-
+    @Transactional
+    public void changeUser(User updateUser) {
+        em.merge(updateUser);
     }
 }
